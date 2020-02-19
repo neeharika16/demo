@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9ec892c6-4dcc-4c1d-9df7-db335379b669" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="dump43Flow1" doc:id="82ab6d3a-b556-4780-988f-8fd200306efe" >
+		<validation:is-number doc:name="Is number" doc:id="6d90f2f8-5b84-42e1-9bf8-e679d6658071" numberType="DOUBLE" message='"validation Error"' minValue="5" maxValue="25" value='"Number"'/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bd914552-3fa9-4fc9-a576-a35c0e954e8e" >
+				<set-payload value='"Error-Private Flow"' doc:name="Error Private Flow" doc:id="45e75b2c-39c3-4d28-a4f7-13a990444f6a" />
+				<logger level="INFO" doc:name="Logger" doc:id="89b55e91-0f52-4b7a-a5ca-550035014495" message='"Private Error Catch Called"'/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="dump43Flow" doc:id="40967f81-3069-49d1-b819-b2cb5ab362e4" >
+		<http:listener doc:name="Listener" doc:id="e2dfdc6d-b863-4145-abb1-75cd293dff6a" config-ref="HTTP_Listener_config" path="/dump43"/>
+		<flow-ref doc:name="Flow Reference" doc:id="8819a985-e1a3-4946-b09f-4bcfd2f12766" name="dump43Flow1" target="dump43Flow1"/>
+		<set-payload value='"Success-Main Flow"' doc:name='"Success- Main Flow"' doc:id="d636cdc5-e6a1-4aef-92d1-fa0ca654bf95" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="42c66575-51d3-470d-908a-cbc7cdecf580" >
+				<set-payload value='"Error- Main Flow"' doc:name='"Error-Main Flow"' doc:id="41284de2-3277-4256-bbee-c03b34e5ec66" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
